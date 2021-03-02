@@ -54,14 +54,14 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 {
 	std::list <Tocken> lTockens;
 
-	//флаг того, что у нас уже есть число и нужно ему найти оператор
+	//С„Р»Р°Рі С‚РѕРіРѕ, С‡С‚Рѕ Сѓ РЅР°СЃ СѓР¶Рµ РµСЃС‚СЊ С‡РёСЃР»Рѕ Рё РЅСѓР¶РЅРѕ РµРјСѓ РЅР°Р№С‚Рё РѕРїРµСЂР°С‚РѕСЂ
 	bool isDigitFound = false;
 
 	char buffer[maxStringSize];
 	
 	int i;
 
-	//проверяем всю строку
+	//РїСЂРѕРІРµСЂСЏРµРј РІСЃСЋ СЃС‚СЂРѕРєСѓ
 	for (i = startPos; i < src.size(); i++) {
 		if (isCharADigit(src.at(i))){
 			if (isDigitFound) {
@@ -70,7 +70,7 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 				return INT_MAX;
 			}
 			
-			//длина числа в символах
+			//РґР»РёРЅР° С‡РёСЃР»Р° РІ СЃРёРјРІРѕР»Р°С…
 			int length = 1;
 			while (i + length < src.size() && isCharADigit(src.at(i + length)))
 				length++;
@@ -104,7 +104,7 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			strcpy_s(buffer, std::to_string(val).c_str());
 			isDigitFound = true;
 
-			//пропускаем скобки
+			//РїСЂРѕРїСѓСЃРєР°РµРј СЃРєРѕР±РєРё
 			int numOfSKOBOK = 1;
 			i++;
 			
@@ -130,7 +130,7 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 	int index = 0;
 
 	/*
-	* выод списка токенов
+	* РІС‹РѕРґ СЃРїРёСЃРєР° С‚РѕРєРµРЅРѕРІ
 	for (auto print : lTockens)
 		std::cout << print.value << ":" << print.operation << "\t";
 	std::cout << std::endl;
@@ -193,5 +193,5 @@ int MyPerfectApp::GetPriority(char action)
 void MyPerfectApp::ClearBuffer(char target[], int size)
 {
 	for (int i = 0; i < size; i++)
-		target[i] = 'М';
+		target[i] = 'Рњ';
 }

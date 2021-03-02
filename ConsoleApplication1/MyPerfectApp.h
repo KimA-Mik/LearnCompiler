@@ -32,8 +32,8 @@ protected:
 	std::vector<std::string> vLines;
 	std::string nameOfInputFile;
 
-	//на будущее
-	//возможно захочу использовать бор
+	//РЅР° Р±СѓРґСѓС‰РµРµ
+	//РІРѕР·РјРѕР¶РЅРѕ Р·Р°С…РѕС‡Сѓ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р±РѕСЂ
 	std::vector<std::string> vUnarOperations = {"-"};
 
 	static const int maxStringSize = 80;

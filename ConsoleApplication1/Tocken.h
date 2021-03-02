@@ -1,7 +1,7 @@
 #pragma once
 #define DEL_EL ')'
 
-
+//структутра токена
 struct Tocken
 {
 	
