@@ -141,9 +141,11 @@
   <ItemGroup>
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="MyPerfectApp.cpp" />
+    <ClCompile Include="RelFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyPerfectApp.h" />
+    <ClInclude Include="RelFunction.h" />
     <ClInclude Include="Tocken.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

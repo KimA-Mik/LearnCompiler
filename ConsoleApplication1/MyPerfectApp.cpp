@@ -8,6 +8,10 @@ MyPerfectApp::MyPerfectApp(int argc, char* argv[])
 		nameOfInputFile = argv[1];
 	else
 		nameOfInputFile = "input.txt";
+
+	MapOfFuncs["sin"] = std::make_unique<SinFunc>();
+	MapOfFuncs["cos"] = std::make_unique<CosFunc>();
+
 }
 
 MyPerfectApp::~MyPerfectApp()
@@ -60,7 +64,7 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 	char buffer[maxStringSize];
 	
 	int i;
-
+	int length = 1;
 	//проверяем всю строку
 	for (i = startPos; i < src.size(); i++) {
 		if (isCharADigit(src.at(i))){
@@ -71,7 +75,7 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			}
 			
 			//длина числа в символах
-			int length = 1;
+			length = 1;
 			while (i + length < src.size() && isCharADigit(src.at(i + length)))
 				length++;
 			ClearBuffer(buffer, maxStringSize);
@@ -87,8 +91,39 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 				return INT_MAX;
 			}
 			else {
-				lTockens.push_back({ std::atoi(buffer), src.at(i) });
+				lTockens.push_back({ std::atof(buffer), src.at(i) });
 				isDigitFound = false;
+			}
+		}
+
+		if (isCharALetter(src.at(i))) {
+			if (isDigitFound) {
+				isAllCorrect = false;
+				std::cerr << "incorrect mathematical expression" << std::endl;
+				return INT_MAX;
+			}
+			length = 1;
+
+			while (i + length < src.size() && isCharALetter(src.at(i + length)))
+				length++;
+			ClearBuffer(buffer, maxStringSize);
+			src.copy(buffer, length, i);
+			
+			std::string sNameOfFunc = src.substr(i, length);
+
+			// тут короче нужно пропарсить аргументы в скобках
+			//мне пока влом
+
+			i += length - 1;
+			isDigitFound = true;
+
+			try {
+				//MapOfFuncs.at(sNameOfFunc)->Execute("AA");
+			}
+			catch (std::out_of_range) {
+				isAllCorrect = false;
+				std::cerr << "incorrect function" << std::endl;
+				return INT_MAX;
 			}
 		}
 
@@ -125,7 +160,7 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 	}
 
 	if (isDigitFound)
-		lTockens.push_back({ std::atoi(buffer), '\n' });
+		lTockens.push_back({ std::atof(buffer), '\n' });
 
 	int index = 0;
 
@@ -175,6 +210,11 @@ bool MyPerfectApp::isCharADigit(char src)
 bool MyPerfectApp::isCharAnOperator(char src)
 {
 	return src == '+' || src == '-' || src == '*' || src == '/';
+}
+
+bool MyPerfectApp::isCharALetter(char src)
+{
+	return src >= 'A' && src <='Z' || src >= 'a' && src <= 'z';
 }
 
 int MyPerfectApp::GetPriority(char action)

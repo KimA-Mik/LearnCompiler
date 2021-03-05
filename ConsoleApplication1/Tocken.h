@@ -1,11 +1,12 @@
 #pragma once
 #define DEL_EL ')'
+#include <iostream>
 
 //структутра токена
 struct Tocken
 {
 	
-	int value;
+	double value;
 	char operation;
 	
 	void Merge(Tocken& rightValue) {

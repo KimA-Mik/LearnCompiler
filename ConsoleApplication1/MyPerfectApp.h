@@ -5,6 +5,9 @@
 #include <vector>
 #include <list>
 #include "Tocken.h"
+#include <memory>
+#include <unordered_map>
+#include "RelFunction.h"
 class MyPerfectApp
 {
 public:
@@ -22,6 +25,7 @@ protected:
 
 	bool isCharADigit(char src);
 	bool isCharAnOperator(char src);
+	bool isCharALetter(char src);
 	int GetPriority(char action);
 
 	void ClearBuffer(char target[], int size);
@@ -33,9 +37,10 @@ protected:
 	std::string nameOfInputFile;
 
 	//на будущее
-	//возможно захочу использовать бор
 	std::vector<std::string> vUnarOperations = {"-"};
 
 	static const int maxStringSize = 80;
+
+	std::unordered_map<std::string,std::unique_ptr<RelFunction>> MapOfFuncs;
 };
 
