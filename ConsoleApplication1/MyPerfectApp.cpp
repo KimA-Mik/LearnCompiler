@@ -54,14 +54,14 @@ void MyPerfectApp::ParseFile()
 	input.close();
 }
 
-int MyPerfectApp::ProcessString(const std::string& src, int startPos)
+double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 {
 	std::list <Tocken> lTockens;
 
 	//флаг того, что у нас уже есть число и нужно ему найти оператор
 	bool isDigitFound = false;
 
-	char buffer[maxStringSize];
+	std::string sBuffer;
 	
 	int i;
 	int length = 1;
@@ -78,8 +78,9 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			length = 1;
 			while (i + length < src.size() && isCharADigit(src.at(i + length)))
 				length++;
-			ClearBuffer(buffer, maxStringSize);
-			src.copy(buffer, length, i);
+
+			sBuffer = src.substr(i, length);
+			
 			i += length - 1;
 			isDigitFound = true;
 		}
@@ -91,7 +92,8 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 				return INT_MAX;
 			}
 			else {
-				lTockens.push_back({ std::atof(buffer), src.at(i) });
+				lTockens.push_back({ std::atof(sBuffer.c_str()), src.at(i) });
+				//lTockens.push_back({ std::atof(buffer), src.at(i) });
 				isDigitFound = false;
 			}
 		}
@@ -106,37 +108,74 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 
 			while (i + length < src.size() && isCharALetter(src.at(i + length)))
 				length++;
-			ClearBuffer(buffer, maxStringSize);
-			src.copy(buffer, length, i);
 			
+			std::vector<double> vArgs;
 			std::string sNameOfFunc = src.substr(i, length);
+			StringToLower(sNameOfFunc);
+
 
 			// тут короче нужно пропарсить аргументы в скобках
 			//мне пока влом
 
-			i += length - 1;
-			isDigitFound = true;
-
+			int iBraceCount = 1;
 			try {
-				//MapOfFuncs.at(sNameOfFunc)->Execute("AA");
+				while (src.at(i + length) != '(')
+					length++;
+
+				vArgs.push_back(ProcessString(src, length + i));
+				while (iBraceCount) {
+					length++;
+					switch (src.at(length + i))
+					{
+					case '(':
+						iBraceCount++;
+						break;
+					case ')':
+						iBraceCount--;
+						break;
+					case ARG_DEV:
+						vArgs.push_back(ProcessString(src, length + i));
+						break;
+					} 
+				}
+			}
+			catch (std::out_of_range) {
+				isAllCorrect = false;
+				std::cerr << "Something with the function arguments went wrong" << std::endl;
+				return INT_MAX;
+			}
+
+
+			
+
+			
+			double dResult;
+			try {
+				dResult = MapOfFuncs.at(sNameOfFunc)->Execute(vArgs);
 			}
 			catch (std::out_of_range) {
 				isAllCorrect = false;
 				std::cerr << "incorrect function" << std::endl;
 				return INT_MAX;
 			}
+
+			sBuffer = std::to_string(dResult);
+
+			i += length;
+			isDigitFound = true;
 		}
 
-		if (src.at(i) == '(') {
+		if (i < src.size() && src.at(i) == '(') {
 			if (isDigitFound) {
 				isAllCorrect = false;
 				std::cerr << "incorrect mathematical expression" << std::endl;
 				return INT_MAX;
 			}
 
-			int val = ProcessString(src, i + 1);
+			double val = ProcessString(src, i + 1);
 
-			strcpy_s(buffer, std::to_string(val).c_str());
+			sBuffer = std::to_string(val);
+			
 			isDigitFound = true;
 
 			//пропускаем скобки
@@ -153,14 +192,14 @@ int MyPerfectApp::ProcessString(const std::string& src, int startPos)
 		}
 			
 
-
-		if (src.at(i) == ')') {
+		
+		if (i < src.size()  && src.at(i) == ')' || src.at(i) == ARG_DEV) {
 			break;
 		}
 	}
 
 	if (isDigitFound)
-		lTockens.push_back({ std::atof(buffer), '\n' });
+		lTockens.push_back({ std::atof(sBuffer.c_str()), '\n' });
 
 	int index = 0;
 
@@ -234,4 +273,12 @@ void MyPerfectApp::ClearBuffer(char target[], int size)
 {
 	for (int i = 0; i < size; i++)
 		target[i] = 'М';
+}
+
+void MyPerfectApp::StringToLower(std::string& src)
+{
+	for (auto Ch : src) {
+		if (Ch <= 'Z' && Ch >= 'A')
+			Ch = Ch - ('Z' - 'z');
+	}
 }

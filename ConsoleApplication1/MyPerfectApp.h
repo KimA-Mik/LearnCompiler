@@ -21,7 +21,7 @@ protected:
 
 	void ParseFile();
 
-	int ProcessString(const std::string& src, int startPos = 0);
+	double ProcessString(const std::string& src, int startPos = 0);
 
 	bool isCharADigit(char src);
 	bool isCharAnOperator(char src);
@@ -29,6 +29,7 @@ protected:
 	int GetPriority(char action);
 
 	void ClearBuffer(char target[], int size);
+	void StringToLower(std::string& src);
 
 
 	bool isAllCorrect;
