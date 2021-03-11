@@ -3,6 +3,7 @@
 #include <vector>
 #include "Tocken.h"
 #define ARG_DEV ','
+#define PI 3.14159265 
 class RelFunction
 {
 protected:
@@ -12,8 +13,8 @@ protected:
 	void ProcessDataString(std::string& Src);
 
 public:
-	RelFunction();
-	virtual ~RelFunction();
+	RelFunction() {}
+	virtual ~RelFunction() {}
 
 	virtual double Execute(std::vector<double>& data);
 };
@@ -21,8 +22,8 @@ public:
 class SinFunc : public RelFunction
 {
 public:
-	SinFunc();
-	~SinFunc();
+	SinFunc() {}
+	~SinFunc() {}
 	virtual double Execute(std::vector<double>& data) override;
 private:
 	
@@ -31,8 +32,28 @@ private:
 class CosFunc : public RelFunction
 {
 public:
-	CosFunc();
-	~CosFunc();
+	CosFunc() {}
+	~CosFunc(){}
+	virtual double Execute(std::vector<double>& data) override;
+private:
+
+};
+
+class SinDegreeFunc : public RelFunction
+{
+public:
+	SinDegreeFunc(){}
+	~SinDegreeFunc(){}
+	virtual double Execute(std::vector<double>& data) override;
+private:
+
+};
+
+class CosDegreeFunc : public RelFunction
+{
+public:
+	CosDegreeFunc(){}
+	~CosDegreeFunc(){}
 	virtual double Execute(std::vector<double>& data) override;
 private:
 

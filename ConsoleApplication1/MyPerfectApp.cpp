@@ -11,6 +11,8 @@ MyPerfectApp::MyPerfectApp(int argc, char* argv[])
 
 	MapOfFuncs["sin"] = std::make_unique<SinFunc>();
 	MapOfFuncs["cos"] = std::make_unique<CosFunc>();
+	MapOfFuncs["sindegree"] = std::make_unique<SinDegreeFunc>();
+	MapOfFuncs["cosdegree"] = std::make_unique<CosDegreeFunc>();
 
 }
 
@@ -70,7 +72,7 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 		if (isCharADigit(src.at(i))){
 			if (isDigitFound) {
 				isAllCorrect = false;
-				std::cerr << "incorrect mathematical expression" << std::endl;
+				std::cerr << "The char is a digit but a digit was found" << std::endl;
 				return INT_MAX;
 			}
 			
@@ -88,12 +90,11 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 		if (isCharAnOperator(src.at(i))) {
 			if (!isDigitFound) {
 				isAllCorrect = false;
-				std::cerr << "incorrect mathematical expression" << std::endl;
+				std::cerr << "The char is an operator but a digit was found" << std::endl;
 				return INT_MAX;
 			}
 			else {
 				lTockens.push_back({ std::atof(sBuffer.c_str()), src.at(i) });
-				//lTockens.push_back({ std::atof(buffer), src.at(i) });
 				isDigitFound = false;
 			}
 		}
@@ -101,14 +102,14 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 		if (isCharALetter(src.at(i))) {
 			if (isDigitFound) {
 				isAllCorrect = false;
-				std::cerr << "incorrect mathematical expression" << std::endl;
+				std::cerr << "The char is a letter but a digit was found" << std::endl;
 				return INT_MAX;
 			}
 			length = 1;
 
 			while (i + length < src.size() && isCharALetter(src.at(i + length)))
 				length++;
-			
+
 			std::vector<double> vArgs;
 			std::string sNameOfFunc = src.substr(i, length);
 			StringToLower(sNameOfFunc);
@@ -122,7 +123,7 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 				while (src.at(i + length) != '(')
 					length++;
 
-				vArgs.push_back(ProcessString(src, length + i));
+				vArgs.push_back(ProcessString(src, length + i + 1));
 				while (iBraceCount) {
 					length++;
 					switch (src.at(length + i))
@@ -161,14 +162,14 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 
 			sBuffer = std::to_string(dResult);
 
-			i += length;
+			i += length ;
 			isDigitFound = true;
 		}
 
 		if (i < src.size() && src.at(i) == '(') {
 			if (isDigitFound) {
 				isAllCorrect = false;
-				std::cerr << "incorrect mathematical expression" << std::endl;
+				std::cerr << "An operator was expected, not a brace" << std::endl;
 				return INT_MAX;
 			}
 
@@ -203,12 +204,13 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 
 	int index = 0;
 
-	/*
-	* выод списка токенов
+	
+	//вывод списка токенов
+	std::cout << std::endl;
 	for (auto print : lTockens)
 		std::cout << print.value << ":" << print.operation << "\t";
 	std::cout << std::endl;
-	*/
+	
 
 	while (lTockens.size() > 1) {
 
