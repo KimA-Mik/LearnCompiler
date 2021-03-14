@@ -32,6 +32,9 @@ struct Tocken
 			break;
 
 		case '/':
+			if (rightValue.value == 0)
+				throw 0;
+
 			value /= rightValue.value;
 			operation = rightValue.operation;
 			rightValue.operation = DEL_EL;

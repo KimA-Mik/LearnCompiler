@@ -43,3 +43,10 @@ double CosDegreeFunc::Execute(std::vector<double>& data)
 		return cos(data[0] * PI / 180);
 	else return 0;
 }
+
+double MaxFunc::Execute(std::vector<double>& data)
+{
+	if (data.size() == 2)
+		return (data[0] > data[1]) ? data[0] : data[1];
+	else return 0;
+}

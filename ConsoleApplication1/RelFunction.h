@@ -58,3 +58,13 @@ public:
 private:
 
 };
+
+class MaxFunc : public RelFunction
+{
+public:
+	MaxFunc() {}
+	~MaxFunc() {}
+	virtual double Execute(std::vector<double>& data) override;
+private:
+
+};

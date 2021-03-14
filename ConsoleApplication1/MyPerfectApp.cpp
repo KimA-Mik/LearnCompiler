@@ -14,6 +14,8 @@ MyPerfectApp::MyPerfectApp(int argc, char* argv[])
 	MapOfFuncs["sindegree"] = std::make_unique<SinDegreeFunc>();
 	MapOfFuncs["cosdegree"] = std::make_unique<CosDegreeFunc>();
 
+	MapOfFuncs["max"] = std::make_unique<MaxFunc>();
+
 }
 
 MyPerfectApp::~MyPerfectApp()
@@ -64,6 +66,7 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 	bool isDigitFound = false;
 
 	std::string sBuffer;
+	double dBuffer = 0.0;
 	
 	int i;
 	int length = 1;
@@ -82,6 +85,7 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 				length++;
 
 			sBuffer = src.substr(i, length);
+			dBuffer = std::atof(src.substr(i, length).c_str());
 			
 			i += length - 1;
 			isDigitFound = true;
@@ -94,7 +98,7 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 				return INT_MAX;
 			}
 			else {
-				lTockens.push_back({ std::atof(sBuffer.c_str()), src.at(i) });
+				lTockens.push_back({ dBuffer, src.at(i) });
 				isDigitFound = false;
 			}
 		}
@@ -123,9 +127,10 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 				while (src.at(i + length) != '(')
 					length++;
 
-				vArgs.push_back(ProcessString(src, length + i + 1));
+				vArgs.push_back(ProcessString(src, ++length + i));
 				while (iBraceCount) {
-					length++;
+					
+					//нужно нашаманить с вложенными функциями
 					switch (src.at(length + i))
 					{
 					case '(':
@@ -135,9 +140,10 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 						iBraceCount--;
 						break;
 					case ARG_DEV:
-						vArgs.push_back(ProcessString(src, length + i));
+						vArgs.push_back(ProcessString(src, length + i + 1));
 						break;
 					} 
+					length++;
 				}
 			}
 			catch (std::out_of_range) {
@@ -161,8 +167,9 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			}
 
 			sBuffer = std::to_string(dResult);
+			dBuffer = dResult;
 
-			i += length ;
+			i += length;
 			isDigitFound = true;
 		}
 
@@ -176,6 +183,7 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			double val = ProcessString(src, i + 1);
 
 			sBuffer = std::to_string(val);
+			dBuffer = val;
 			
 			isDigitFound = true;
 
@@ -194,50 +202,63 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			
 
 		
-		if (i < src.size()  && src.at(i) == ')' || src.at(i) == ARG_DEV) {
+		if (i < src.size()  && (src.at(i) == ')' || src.at(i) == ARG_DEV)) {
 			break;
 		}
 	}
 
 	if (isDigitFound)
-		lTockens.push_back({ std::atof(sBuffer.c_str()), '\n' });
+		lTockens.push_back({ dBuffer, '\n' });
 
 	int index = 0;
 
 	
-	//вывод списка токенов
-	std::cout << std::endl;
-	for (auto print : lTockens)
-		std::cout << print.value << ":" << print.operation << "\t";
-	std::cout << std::endl;
+	////вывод списка токенов
+	//std::cout << std::endl;
+	//for (auto print : lTockens)
+	//	std::cout << print.value << ":" << print.operation << "\t";
+	//std::cout << std::endl;
 	
+	try {
+		while (lTockens.size() > 1) {
 
-	while (lTockens.size() > 1) {
-
-		auto begin{ lTockens.begin() };
-		auto prevEl{ lTockens.begin() };
-		auto end{ lTockens.end() };
+			auto begin{ lTockens.begin() };
+			auto prevEl{ lTockens.begin() };
+			auto end{ lTockens.end() };
 
 
-		for (auto el{ begin }; el != end; ++el) {
-			if (el->operation == DEL_EL) {
-				el = lTockens.erase(el);
-			}
-
-			if (prevEl != el) {
-
-				if (GetPriority(prevEl->operation) >= GetPriority(el->operation)) {
-					prevEl->Merge(*el);
+			for (auto el{ begin }; el != end; ++el) {
+				if (el->operation == DEL_EL) {
 					el = lTockens.erase(el);
-					--el;
 				}
+
+				if (prevEl != el) {
+
+					if (GetPriority(prevEl->operation) >= GetPriority(el->operation)) {
+						prevEl->Merge(*el);
+						el = lTockens.erase(el);
+						--el;
+					}
+				}
+
+
+				prevEl = el;
+
 			}
-
-
-			prevEl = el;
 
 		}
-
+	}
+	catch (int iEx) {
+		switch (iEx)
+		{
+		case 0:
+			std::cerr << "Attempted to divide by zero" << std::endl;
+			break;
+		default:
+			std::cerr << "An unknown exeption has been occuerd" << std::endl;
+			break;
+		}
+		return INT_MAX;
 	}
 
 	return lTockens.begin()->value;
