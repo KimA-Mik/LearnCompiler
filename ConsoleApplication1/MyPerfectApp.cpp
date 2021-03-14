@@ -140,6 +140,9 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 						iBraceCount--;
 						break;
 					case ARG_DEV:
+						//разделитель одной функции влияет на аргуметы внешней функции
+						//sindegree (max (20, 30)) так у синуса будет 2 аргумента
+						//30 и 30
 						vArgs.push_back(ProcessString(src, length + i + 1));
 						break;
 					} 
