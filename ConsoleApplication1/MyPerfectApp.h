@@ -27,6 +27,7 @@ protected:
 	bool isCharAnOperator(char src);
 	bool isCharALetter(char src);
 	int GetPriority(char action);
+	int SkipArgs(const std::string& src, int startPos);
 
 	void ClearBuffer(char target[], int size);
 	void StringToLower(std::string& src);
@@ -36,9 +37,6 @@ protected:
 	
 	std::vector<std::string> vLines;
 	std::string nameOfInputFile;
-
-	//на будущее
-	std::vector<std::string> vUnarOperations = {"-"};
 
 	static const int maxStringSize = 80;
 

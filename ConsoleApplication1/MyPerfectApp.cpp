@@ -129,23 +129,15 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 
 				vArgs.push_back(ProcessString(src, ++length + i));
 				while (iBraceCount) {
-					
-					//нужно нашаманить с вложенными функциями
-					switch (src.at(length + i))
-					{
-					case '(':
-						iBraceCount++;
-						break;
-					case ')':
-						iBraceCount--;
-						break;
-					case ARG_DEV:
-						//разделитель одной функции влияет на аргуметы внешней функции
-						//sindegree (max (20, 30)) так у синуса будет 2 аргумента
-						//30 и 30
-						vArgs.push_back(ProcessString(src, length + i + 1));
-						break;
-					} 
+
+					if (src.at(length + i) == '(') iBraceCount++;
+					else if (src.at(length + i) == ')') iBraceCount--;
+					else if (src.at(length + i) == ARG_DEV) vArgs.push_back(ProcessString(src, length + i + 1));
+					//пропускаем содержимое скобок функции
+					else if (isCharALetter(src.at(length + i))) length = SkipArgs(src, length + i) - i;
+
+
+
 					length++;
 				}
 			}
@@ -293,6 +285,25 @@ int MyPerfectApp::GetPriority(char action)
 		return 0;
 	}
 	return 0;
+}
+
+int MyPerfectApp::SkipArgs(const std::string& src, int startPos)
+{
+	int iBraceCount = 1;
+	int iResPos = startPos;
+
+	while (src.at(iResPos) != '(')
+		iResPos++;
+
+	while (iBraceCount)
+	{
+		iResPos++;
+
+		if (src.at(iResPos) == '(') iBraceCount++;
+		if (src.at(iResPos) == ')') iBraceCount--;
+ 	}
+
+	return iResPos;
 }
 
 void MyPerfectApp::ClearBuffer(char target[], int size)
