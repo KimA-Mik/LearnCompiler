@@ -27,9 +27,17 @@ int MyPerfectApp::exec()
 	if(isAllCorrect)
 		ParseFile();
 
+	//std::cout << "Локаль: " << setlocale(LC_ALL, "Russian") << std::endl;
+
+	SetConsoleCP(CP_UTF8);
+	SetConsoleOutputCP(CP_UTF8);
+
+
 	for (auto& val : vLines)
-		if (isAllCorrect && val.size() > 0)
-			std::cout << ProcessString(val) << std::endl;
+		if (isAllCorrect && val.size() > 0) {
+			std::cout << "Результат выполнения выражения: " << val << "\n>>";
+			std::cout << ProcessString(val) << std::endl << std::endl;
+		}
 	
 	return 0;
 }

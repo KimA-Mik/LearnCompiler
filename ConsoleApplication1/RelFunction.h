@@ -6,17 +6,11 @@
 #define PI 3.14159265 
 class RelFunction
 {
-protected:
-
-	std::vector<double> vAgrs;
-
-	void ProcessDataString(std::string& Src);
-
 public:
 	RelFunction() {}
 	virtual ~RelFunction() {}
 
-	virtual double Execute(std::vector<double>& data);
+	virtual double Execute(std::vector<double>& data) { return 0; }
 };
 
 class SinFunc : public RelFunction
@@ -25,8 +19,6 @@ public:
 	SinFunc() {}
 	~SinFunc() {}
 	virtual double Execute(std::vector<double>& data) override;
-private:
-	
 };
 
 class CosFunc : public RelFunction
@@ -35,8 +27,6 @@ public:
 	CosFunc() {}
 	~CosFunc(){}
 	virtual double Execute(std::vector<double>& data) override;
-private:
-
 };
 
 class SinDegreeFunc : public RelFunction
@@ -45,8 +35,6 @@ public:
 	SinDegreeFunc(){}
 	~SinDegreeFunc(){}
 	virtual double Execute(std::vector<double>& data) override;
-private:
-
 };
 
 class CosDegreeFunc : public RelFunction
@@ -55,8 +43,6 @@ public:
 	CosDegreeFunc(){}
 	~CosDegreeFunc(){}
 	virtual double Execute(std::vector<double>& data) override;
-private:
-
 };
 
 class MaxFunc : public RelFunction
@@ -65,6 +51,4 @@ public:
 	MaxFunc() {}
 	~MaxFunc() {}
 	virtual double Execute(std::vector<double>& data) override;
-private:
-
 };
