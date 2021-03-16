@@ -1,6 +1,6 @@
 sindegree(30) * cosdegree(30)
 sindegree(15 + 15) * sindegree(10 * 3)  + cosdegree(30) * cosdegree(30)  
 
-max (2,3)
+max (2,3,4,5,6,7)
 
 sindegree (max (20, 30))

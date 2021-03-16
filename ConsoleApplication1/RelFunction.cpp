@@ -46,7 +46,14 @@ double CosDegreeFunc::Execute(std::vector<double>& data)
 
 double MaxFunc::Execute(std::vector<double>& data)
 {
-	if (data.size() == 2)
-		return (data[0] > data[1]) ? data[0] : data[1];
-	else return 0;
+	if (!data.empty()) {
+		double dMax = data.at(0);
+		for (auto Element : data) 
+			if (Element > dMax)
+				dMax = Element;
+		
+		return dMax;
+	}
+	throw -1;
+	return 0;
 }
