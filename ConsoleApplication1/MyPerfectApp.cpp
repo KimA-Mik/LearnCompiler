@@ -27,8 +27,6 @@ int MyPerfectApp::exec()
 	if(isAllCorrect)
 		ParseFile();
 
-	//std::cout << "Локаль: " << setlocale(LC_ALL, "Russian") << std::endl;
-
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
