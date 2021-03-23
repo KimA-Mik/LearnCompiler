@@ -5,14 +5,14 @@
 double SinFunc::Execute(std::vector<double>& data) {
 	if (data.size() == 1)
 		return sin(data[0]);
-	else return 0;
+	return 0;
 }
 
 
 double CosFunc::Execute(std::vector<double>& data) {
 	if (data.size() == 1)
 		return cos(data[0]);
-	else return 0;
+	return 0;
 }
 
 
@@ -20,7 +20,7 @@ double SinDegreeFunc::Execute(std::vector<double>& data)
 {
 	if (data.size() == 1)
 		return sin(data[0] * PI / 180);
-	else return 0;
+	return 0;
 }
 
 
@@ -28,7 +28,7 @@ double CosDegreeFunc::Execute(std::vector<double>& data)
 {
 	if (data.size() == 1)
 		return cos(data[0] * PI / 180);
-	else return 0;
+	return 0;
 }
 
 

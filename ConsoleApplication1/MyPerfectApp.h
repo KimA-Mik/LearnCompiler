@@ -24,14 +24,14 @@ protected:
 
 	double ProcessString(const std::string& src, int startPos = 0);
 
-	bool isCharADigit(char src);
-	bool isCharAnOperator(char src);
-	bool isCharALetter(char src);
-	int GetPriority(char action);
-	int SkipArgs(const std::string& src, int startPos);
+	static bool isCharADigit(char src);
+	static bool isCharAnOperator(char src);
+	static bool isCharALetter(char src);
+	static int GetPriority(char action);
+	static int SkipArgs(const std::string& src, int startPos);
 
-	void ClearBuffer(char target[], int size);
-	void StringToLower(std::string& src);
+	static void ClearBuffer(char target[], int size);
+	static void StringToLower(std::string& src);
 
 
 	bool isAllCorrect;

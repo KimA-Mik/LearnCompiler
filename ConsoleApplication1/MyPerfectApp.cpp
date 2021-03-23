@@ -71,7 +71,6 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 	//флаг того, что у нас уже есть число и нужно ему найти оператор
 	bool isDigitFound = false;
 
-	std::string sBuffer;
 	double dBuffer = 0.0;
 	
 	int i;
@@ -90,7 +89,6 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			while (i + length < src.size() && isCharADigit(src.at(i + length)))
 				length++;
 
-			sBuffer = src.substr(i, length);
 			dBuffer = std::atof(src.substr(i, length).c_str());
 			
 			i += length - 1;
@@ -147,7 +145,7 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 					length++;
 				}
 			}
-			catch (std::out_of_range) {
+			catch (std::out_of_range&) {
 				isAllCorrect = false;
 				std::cerr << "Something with the function arguments went wrong" << std::endl;
 				return INT_MAX;
@@ -161,13 +159,12 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			try {
 				dResult = MapOfFuncs.at(sNameOfFunc)->Execute(vArgs);
 			}
-			catch (std::out_of_range) {
+			catch (std::out_of_range&) {
 				isAllCorrect = false;
 				std::cerr << "incorrect function" << std::endl;
 				return INT_MAX;
 			}
 
-			sBuffer = std::to_string(dResult);
 			dBuffer = dResult;
 
 			i += length;
@@ -183,7 +180,6 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 
 			double val = ProcessString(src, i + 1);
 
-			sBuffer = std::to_string(val);
 			dBuffer = val;
 			
 			isDigitFound = true;
@@ -290,7 +286,6 @@ int MyPerfectApp::GetPriority(char action)
 	default:
 		return 0;
 	}
-	return 0;
 }
 
 int MyPerfectApp::SkipArgs(const std::string& src, int startPos)

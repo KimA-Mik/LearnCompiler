@@ -7,8 +7,8 @@
 class RelFunction
 {
 public:
-	RelFunction() {}
-	virtual ~RelFunction() {}
+	RelFunction() = default;
+	virtual ~RelFunction() = default;
 
 	virtual double Execute(std::vector<double>& data) { return 0; }
 };
@@ -16,39 +16,39 @@ public:
 class SinFunc : public RelFunction
 {
 public:
-	SinFunc() {}
-	~SinFunc() {}
-	virtual double Execute(std::vector<double>& data) override;
+	SinFunc() = default;
+	~SinFunc() override = default;
+	double Execute(std::vector<double>& data) override;
 };
 
 class CosFunc : public RelFunction
 {
 public:
-	CosFunc() {}
-	~CosFunc(){}
-	virtual double Execute(std::vector<double>& data) override;
+	CosFunc() = default;
+	~CosFunc() override = default;
+	double Execute(std::vector<double>& data) override;
 };
 
 class SinDegreeFunc : public RelFunction
 {
 public:
-	SinDegreeFunc(){}
-	~SinDegreeFunc(){}
-	virtual double Execute(std::vector<double>& data) override;
+	SinDegreeFunc() = default;
+	~SinDegreeFunc() override = default;
+	double Execute(std::vector<double>& data) override;
 };
 
 class CosDegreeFunc : public RelFunction
 {
 public:
-	CosDegreeFunc(){}
-	~CosDegreeFunc(){}
-	virtual double Execute(std::vector<double>& data) override;
+	CosDegreeFunc() = default;
+	~CosDegreeFunc() override = default;
+	double Execute(std::vector<double>& data) override;
 };
 
 class MaxFunc : public RelFunction
 {
 public:
-	MaxFunc() {}
-	~MaxFunc() {}
-	virtual double Execute(std::vector<double>& data) override;
+	MaxFunc() = default;
+	~MaxFunc() override = default;
+	double Execute(std::vector<double>& data) override;
 };
