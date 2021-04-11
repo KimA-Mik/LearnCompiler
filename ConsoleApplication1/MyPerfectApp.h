@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include "RelFunction.h"
 #include <Windows.h>
+#include "PreprocessMethods.h"
 class MyPerfectApp
 {
 public:
@@ -42,5 +43,6 @@ protected:
 	static const int maxStringSize = 80;
 
 	std::unordered_map<std::string,std::unique_ptr<RelFunction>> MapOfFuncs;
+	std::unordered_map<std::string, std::unique_ptr<PreprocessMethod>> MapOfPrep;
 };
 

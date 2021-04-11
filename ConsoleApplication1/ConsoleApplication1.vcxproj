@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyPerfectApp.h" />
+    <ClInclude Include="PreprocessMethods.h" />
     <ClInclude Include="RelFunction.h" />
     <ClInclude Include="Tocken.h" />
   </ItemGroup>

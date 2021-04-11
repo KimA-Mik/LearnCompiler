@@ -16,6 +16,9 @@ MyPerfectApp::MyPerfectApp(int argc, char* argv[])
 
 	MapOfFuncs["max"] = std::make_unique<MaxFunc>();
 
+	MapOfPrep["if"] = std::make_unique<IfMethod>();
+	MapOfPrep["for"] = std::make_unique<ForMethod>();
+
 }
 
 MyPerfectApp::~MyPerfectApp()
@@ -122,9 +125,6 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			std::string sNameOfFunc = src.substr(i, length);
 			StringToLower(sNameOfFunc);
 
-
-			// тут короче нужно пропарсить аргументы в скобках
-			//мне пока влом
 
 			int iBraceCount = 1;
 			try {
@@ -283,6 +283,9 @@ int MyPerfectApp::GetPriority(char action)
 	case '/': return 3;
 	case '+':
 	case '-': return 2;
+	case '<':
+	case '>':
+	case '=': return 1;
 	default:
 		return 0;
 	}
