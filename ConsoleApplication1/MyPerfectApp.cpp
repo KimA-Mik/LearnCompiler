@@ -33,12 +33,14 @@ int MyPerfectApp::exec()
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
+	ExecuteBracketZone(1, { 0,vLines.size() }, vLines);
 
-	for (auto& val : vLines)
+	/*for (auto& val : vLines)
 		if (isAllCorrect && val.size() > 0) {
 			std::cout << "Результат выполнения выражения: " << val << "\n>>";
 			std::cout << ProcessString(val) << std::endl << std::endl;
 		}
+	*/
 	
 	return 0;
 }
@@ -63,6 +65,8 @@ void MyPerfectApp::ParseFile()
 		input.getline(inputBuffer, maxStringSize, separator); 
 		vLines.push_back(inputBuffer);
 	}
+
+	vLines.push_back("}");
 
 	input.close();
 }
@@ -121,8 +125,8 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 			while (i + length < src.size() && isCharALetter(src.at(i + length)))
 				length++;
 
-			std::vector<double> vArgs;
 			std::string sNameOfFunc = src.substr(i, length);
+			std::vector<double> vArgs;
 			StringToLower(sNameOfFunc);
 
 
@@ -259,6 +263,12 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 	}
 
 	return lTockens.begin()->value;
+}
+
+void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData,
+	std::vector<std::string>& sourceData)
+{
+	
 }
 
 bool MyPerfectApp::isCharADigit(char src)

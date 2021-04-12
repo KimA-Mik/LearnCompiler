@@ -39,6 +39,35 @@ struct Tocken
 			operation = rightValue.operation;
 			rightValue.operation = DEL_EL;
 			break;
+
+		case '>':
+			if (value > rightValue.value)
+				value = 1;
+			else
+				value = 0;
+			operation = rightValue.operation;
+			rightValue.operation = DEL_EL;
+			break;
+			
+		case '<':
+			if (value < rightValue.value)
+				value = 1;
+			else
+				value = 0;
+			operation = rightValue.operation;
+			rightValue.operation = DEL_EL;
+			break;
+
+		case '=':
+			if (value == rightValue.value)
+				value = 1;
+			else
+				value = 0;
+			operation = rightValue.operation;
+			rightValue.operation = DEL_EL;
+			break;
+			
+
 		default:
 			std::cerr << "Lol" << std::endl;
 			break;

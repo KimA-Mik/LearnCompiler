@@ -21,6 +21,12 @@ public:
 
 protected:
 
+	struct BracketZoneData
+	{
+		int beginIndex;
+		int endIndex;
+	};
+
 	void ParseFile();
 
 	double ProcessString(const std::string& src, int startPos = 0);
@@ -34,6 +40,11 @@ protected:
 	static void ClearBuffer(char target[], int size);
 	static void StringToLower(std::string& src);
 
+	static void ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData, std::vector<std::string>& sourceData);
+
+	static const char OPEN_PREPR_BRACKET = '{';
+	static const char CLOSE_PREPR_BRACKET = '}';
+
 
 	bool isAllCorrect;
 	
@@ -45,4 +56,6 @@ protected:
 	std::unordered_map<std::string,std::unique_ptr<RelFunction>> MapOfFuncs;
 	std::unordered_map<std::string, std::unique_ptr<PreprocessMethod>> MapOfPrep;
 };
+
+
 
