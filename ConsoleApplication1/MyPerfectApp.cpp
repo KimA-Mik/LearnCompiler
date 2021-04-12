@@ -33,7 +33,7 @@ int MyPerfectApp::exec()
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	ExecuteBracketZone(1, { 0,vLines.size() }, vLines);
+	ExecuteBracketZone(1, { 0,(int)vLines.size() }, vLines);
 
 	/*for (auto& val : vLines)
 		if (isAllCorrect && val.size() > 0) {
@@ -71,7 +71,7 @@ void MyPerfectApp::ParseFile()
 	input.close();
 }
 
-double MyPerfectApp::ProcessString(const std::string& src, int startPos)
+double MyPerfectApp::ProcessString(std::string& src, int startPos)
 {
 	std::list <Tocken> lTockens;
 
@@ -268,6 +268,104 @@ double MyPerfectApp::ProcessString(const std::string& src, int startPos)
 void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData,
 	std::vector<std::string>& sourceData)
 {
+	try {
+		
+		
+		for (int repeatCount = 0; repeatCount < numOfRepeats; repeatCount++) {
+
+			bool doWeSkip = false;
+			int curLine = 0;
+			/*
+			 * количество не закрытых на данный момент скобок
+			 * в мормальном состоянии всегда одна
+			 */
+			int bracketsCount = 1;
+			BracketZoneData tempData{ 0,0 };
+			int tempRepeatNum = 0;
+			bool tempExp = 0;
+			std::string tempMethodName;
+			
+
+			/*
+			 * этот цикл проходит по всем строкам
+			 * проверяет на наличие заданных открывающтх скобок
+			 * в противном случае исполняет строку
+			 */
+			for (curLine = zoneData.beginIndex; bracketsCount && curLine < zoneData.endIndex; curLine++) {
+
+
+				for (auto curChar : sourceData.at(curLine)) {
+					if (curChar == OPEN_PREPR_BRACKET)
+					{
+						bracketsCount++;
+						//еще не пропускаем
+						if (!doWeSkip) {
+							doWeSkip = true;
+							tempData.beginIndex = curLine + 1;
+
+							bool isExprInCurLine = false;
+							for (auto needForLetter = 0; needForLetter < sourceData.at(curLine).size(); needForLetter++) {
+								int beginOfAWord = 0;
+								if(isCharALetter(needForLetter)){
+									beginOfAWord = needForLetter;
+									isExprInCurLine = true;
+								}
+								else if (isExprInCurLine) {
+									tempMethodName = sourceData.at(curLine).substr(beginOfAWord, needForLetter - 1);
+									tempExp = ProcessString(sourceData.at(curLine), needForLetter);
+								}
+							}
+							//если ключевого слова нет в текущей строке,
+							//проверяем предыдущую
+							if (!isExprInCurLine){
+								for (auto needForLetter = 0; needForLetter < sourceData.at(curLine - 1).size(); needForLetter++) {
+									int beginOfAWord = 0;
+									if (isCharALetter(needForLetter)) {
+										beginOfAWord = needForLetter;
+										isExprInCurLine = true;
+									}
+									else if (isExprInCurLine) {
+										tempMethodName = sourceData.at(curLine - 1).substr(beginOfAWord, needForLetter - 1);
+										tempExp = ProcessString(sourceData.at(curLine - 1), needForLetter);
+									}
+								}
+							}
+							//если все еще не найдено, то все
+							if (!isExprInCurLine) {
+								std::cerr << "Expr was not found\n";
+								isAllCorrect = false;
+								return;
+							}
+							
+							
+						}
+						break;
+					}
+					if(doWeSkip && curChar == OPEN_PREPR_BRACKET)
+					{
+						bracketsCount--;
+						if (doWeSkip) {
+							doWeSkip = false;
+							tempData.endIndex = curLine + 1;
+						}
+						break;
+					}
+
+					
+				}
+
+
+			}
+
+
+
+		}
+	}catch (std::out_of_range&)
+	{
+		std::cerr << "Sth went wrong\n";
+	}
+
+
 	
 }
 
@@ -330,6 +428,6 @@ void MyPerfectApp::StringToLower(std::string& src)
 {
 	for (auto Ch : src) {
 		if (Ch <= 'Z' && Ch >= 'A')
-			Ch = Ch - ('Z' - 'z');
+			Ch -= ('Z' - 'z');
 	}
 }

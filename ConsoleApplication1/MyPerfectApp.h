@@ -29,7 +29,7 @@ protected:
 
 	void ParseFile();
 
-	double ProcessString(const std::string& src, int startPos = 0);
+	double ProcessString(std::string& src, int startPos = 0);
 
 	static bool isCharADigit(char src);
 	static bool isCharAnOperator(char src);
@@ -40,7 +40,7 @@ protected:
 	static void ClearBuffer(char target[], int size);
 	static void StringToLower(std::string& src);
 
-	static void ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData, std::vector<std::string>& sourceData);
+	void ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData, std::vector<std::string>& sourceData);
 
 	static const char OPEN_PREPR_BRACKET = '{';
 	static const char CLOSE_PREPR_BRACKET = '}';
