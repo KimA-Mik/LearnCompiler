@@ -43,5 +43,4 @@ double MaxFunc::Execute(std::vector<double>& data)
 		return dMax;
 	}
 	throw -1;
-	return 0;
 }

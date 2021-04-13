@@ -1,5 +1,20 @@
-2 + 2 * 2
-(2 + 2) * 2
+
+for(2){
+	if(2 > 1){
+		2 + 2 * 2
+	}
+
+	if (sindegree (30))
+	{
+		25 * 25
+	}
+
+	if (cosdegree (90)){
+		125 / 13
+	}
+
+	(2 + 2) * 2
+}
 
 sindegree(30) * cosdegree(30)
 sindegree(15 + 15) * sindegree(10 * 3)  + cosdegree(30) * cosdegree(30)  
