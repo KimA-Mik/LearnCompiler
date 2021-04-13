@@ -323,7 +323,7 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 
 							std::cout << "Следующие выражения будут вполены " << tempRepeatNum << " раз\n";
 							ExecuteBracketZone(tempRepeatNum, tempData, sourceData);
-							std::cout << "Конец выражения, выполнявшегося " << tempRepeatNum << " раз\n\n";
+							std::cout << "Конец выражений, выполнявшегося " << tempRepeatNum << " раз\n\n";
 							
 							tempRepeatNum = 0;
 							tempData = { 0,0 };

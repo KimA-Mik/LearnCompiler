@@ -19,6 +19,8 @@ for(2){
 sindegree(30) * cosdegree(30)
 sindegree(15 + 15) * sindegree(10 * 3)  + cosdegree(30) * cosdegree(30)  
 
+sin(25) * sin(25) + cos(25) * cos(25)
+
 max (2,3,10,5,6,7)
 
 sindegree (max (20, 30))
