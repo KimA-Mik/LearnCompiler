@@ -34,6 +34,7 @@ protected:
 	static bool isCharADigit(char src);
 	static bool isCharAnOperator(char src);
 	static bool isCharALetter(char src);
+	static bool isCharASpace(char src);
 	static int GetPriority(char action);
 	static int SkipArgs(const std::string& src, int startPos);
 

@@ -34,13 +34,6 @@ int MyPerfectApp::exec()
 	SetConsoleOutputCP(CP_UTF8);
 
 	ExecuteBracketZone(1, { 0,(int)vLines.size() }, vLines);
-
-	/*for (auto& val : vLines)
-		if (isAllCorrect && val.size() > 0) {
-			std::cout << "Результат выполнения выражения: " << val << "\n>>";
-			std::cout << ProcessString(val) << std::endl << std::endl;
-		}
-	*/
 	
 	return 0;
 }
@@ -66,9 +59,21 @@ void MyPerfectApp::ParseFile()
 		vLines.push_back(inputBuffer);
 	}
 
-	vLines.push_back("}");
-
 	input.close();
+
+	//почистим пробелы в начале строки
+	for (auto curLine = 0; curLine < vLines.size(); curLine++)
+		for (auto curSymbol = 0; curSymbol < vLines[curLine].size(); curSymbol++)
+			if (isCharASpace(vLines[curLine][curSymbol])) {
+				vLines[curLine].erase(vLines[curLine].begin() + curSymbol);
+				curSymbol--;
+			}
+			else
+				break;
+		
+	
+
+	vLines.push_back("}");
 }
 
 double MyPerfectApp::ProcessString(std::string& src, int startPos)
@@ -282,7 +287,7 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 			int bracketsCount = 1;
 			BracketZoneData tempData{ 0,0 };
 			int tempRepeatNum = 0;
-			bool tempExp = 0;
+			double tempExp = 0.;
 			std::string tempMethodName;
 			
 
@@ -293,65 +298,68 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 			 */
 			for (curLine = zoneData.beginIndex; bracketsCount && curLine < zoneData.endIndex; curLine++) {
 
-
-				for (auto curChar : sourceData.at(curLine)) {
-					if (curChar == OPEN_PREPR_BRACKET)
-					{
-						bracketsCount++;
-						//еще не пропускаем
-						if (!doWeSkip) {
-							doWeSkip = true;
-							tempData.beginIndex = curLine + 1;
-
-							bool isExprInCurLine = false;
-							for (auto needForLetter = 0; needForLetter < sourceData.at(curLine).size(); needForLetter++) {
-								int beginOfAWord = 0;
-								if(isCharALetter(needForLetter)){
-									beginOfAWord = needForLetter;
-									isExprInCurLine = true;
-								}
-								else if (isExprInCurLine) {
-									tempMethodName = sourceData.at(curLine).substr(beginOfAWord, needForLetter - 1);
-									tempExp = ProcessString(sourceData.at(curLine), needForLetter);
-								}
-							}
-							//если ключевого слова нет в текущей строке,
-							//проверяем предыдущую
-							if (!isExprInCurLine){
-								for (auto needForLetter = 0; needForLetter < sourceData.at(curLine - 1).size(); needForLetter++) {
-									int beginOfAWord = 0;
-									if (isCharALetter(needForLetter)) {
-										beginOfAWord = needForLetter;
-										isExprInCurLine = true;
-									}
-									else if (isExprInCurLine) {
-										tempMethodName = sourceData.at(curLine - 1).substr(beginOfAWord, needForLetter - 1);
-										tempExp = ProcessString(sourceData.at(curLine - 1), needForLetter);
-									}
-								}
-							}
-							//если все еще не найдено, то все
-							if (!isExprInCurLine) {
-								std::cerr << "Expr was not found\n";
-								isAllCorrect = false;
-								return;
-							}
-							
-							
-						}
-						break;
-					}
-					if(doWeSkip && curChar == OPEN_PREPR_BRACKET)
-					{
-						bracketsCount--;
-						if (doWeSkip) {
-							doWeSkip = false;
-							tempData.endIndex = curLine + 1;
-						}
-						break;
-					}
+				doWeSkip = false;
+				
+				//не самый эффективный способ
+				for (auto curCharIndex = 0; curCharIndex < sourceData.at(curLine).size(); curCharIndex++) {
 
 					
+					//выделяем ключевые слова и проверяем из вхождение в требуемый перечень
+					if (isCharALetter(sourceData.at(curLine).at(curCharIndex))){
+						int wordBeginIndex = curCharIndex;
+						while ((isCharALetter(sourceData.at(curLine).at(curCharIndex))))
+							curCharIndex++;
+
+						tempMethodName = sourceData.at(curLine).substr(wordBeginIndex, curCharIndex - wordBeginIndex);
+						StringToLower(tempMethodName);
+
+						if(MapOfPrep.find(tempMethodName) != MapOfPrep.end() && bracketsCount == 1){
+							while (sourceData.at(curLine).at(curCharIndex) != '(')
+								curCharIndex++;
+							tempExp = ProcessString(sourceData.at(curLine), curCharIndex + 1);
+
+							tempRepeatNum = MapOfPrep[tempMethodName]->getRepeatNumber(tempExp);
+
+							doWeSkip = true;
+								
+						}
+						
+						
+					}
+					
+					if (sourceData.at(curLine).at(curCharIndex) == OPEN_PREPR_BRACKET){
+						if (bracketsCount == 1)
+							tempData.beginIndex = curLine + 1;
+						bracketsCount++;
+						doWeSkip = true;
+						
+						
+					}
+
+					if (sourceData.at(curLine).at(curCharIndex) == CLOSE_PREPR_BRACKET) {
+						if (bracketsCount == 2){
+							//не уверен насчет смещения конца блока
+							tempData.endIndex = curLine;
+
+							std::cout << "Следующие выражения будут вполены " << tempRepeatNum << " раз\n";
+							ExecuteBracketZone(tempRepeatNum, tempData, sourceData);
+							std::cout << "Конец выражения, выполнявшегося " << tempRepeatNum << " раз\n\n";
+							
+							tempRepeatNum = 0;
+							tempData = { 0,0 };
+						}
+						bracketsCount--;
+						doWeSkip = true;
+						
+						
+					}
+					
+				}
+				
+
+				if (!doWeSkip && isAllCorrect && sourceData.at(curLine).size() > 0 && bracketsCount == 1) {
+					std::cout << "Результат выполнения выражения: " << sourceData.at(curLine) << "\n>>";
+					std::cout << ProcessString(sourceData.at(curLine)) << std::endl << std::endl;
 				}
 
 
@@ -376,12 +384,16 @@ bool MyPerfectApp::isCharADigit(char src)
 
 bool MyPerfectApp::isCharAnOperator(char src)
 {
-	return src == '+' || src == '-' || src == '*' || src == '/';
+	return src == '+' || src == '-' || src == '*' || src == '/' || src == '<' || src == '=' || src == '>';
 }
 
 bool MyPerfectApp::isCharALetter(char src)
 {
 	return src >= 'A' && src <='Z' || src >= 'a' && src <= 'z';
+}
+
+bool MyPerfectApp::isCharASpace(char src) {
+	return src == ' ' || src == '\t';
 }
 
 int MyPerfectApp::GetPriority(char action)
@@ -426,8 +438,8 @@ void MyPerfectApp::ClearBuffer(char target[], int size)
 
 void MyPerfectApp::StringToLower(std::string& src)
 {
-	for (auto Ch : src) {
-		if (Ch <= 'Z' && Ch >= 'A')
-			Ch -= ('Z' - 'z');
+	for (int chInd = 0; chInd < src.size(); chInd++) {
+		if (src[chInd] <= 'Z' && src[chInd] >= 'A')
+			src[chInd] -= ('Z' - 'z');
 	}
 }
