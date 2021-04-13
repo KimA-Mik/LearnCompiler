@@ -10,6 +10,8 @@
 #include "RelFunction.h"
 #include <Windows.h>
 #include "PreprocessMethods.h"
+
+
 class MyPerfectApp
 {
 public:
@@ -52,7 +54,7 @@ protected:
 	std::vector<std::string> vLines;
 	std::string nameOfInputFile;
 
-	static const int maxStringSize = 80;
+	static const int maxStringSize = 100;
 
 	std::unordered_map<std::string,std::unique_ptr<RelFunction>> MapOfFuncs;
 	std::unordered_map<std::string, std::unique_ptr<PreprocessMethod>> MapOfPrep;

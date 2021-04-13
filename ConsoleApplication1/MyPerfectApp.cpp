@@ -149,8 +149,6 @@ double MyPerfectApp::ProcessString(std::string& src, int startPos)
 					//пропускаем содержимое скобок функции
 					else if (isCharALetter(src.at(length + i))) length = SkipArgs(src, length + i) - i;
 
-
-
 					length++;
 				}
 			}
@@ -160,10 +158,6 @@ double MyPerfectApp::ProcessString(std::string& src, int startPos)
 				return INT_MAX;
 			}
 
-
-			
-
-			
 			double dResult;
 			try {
 				dResult = MapOfFuncs.at(sNameOfFunc)->Execute(vArgs);
@@ -205,8 +199,6 @@ double MyPerfectApp::ProcessString(std::string& src, int startPos)
 				i++;
 			}
 		}
-			
-
 		
 		if (i < src.size()  && (src.at(i) == ')' || src.at(i) == ARG_DEV)) {
 			break;
@@ -216,14 +208,7 @@ double MyPerfectApp::ProcessString(std::string& src, int startPos)
 	if (isDigitFound)
 		lTockens.push_back({ dBuffer, '\n' });
 
-	int index = 0;
-
-	
-	////вывод списка токенов
-	//std::cout << std::endl;
-	//for (auto print : lTockens)
-	//	std::cout << print.value << ":" << print.operation << "\t";
-	//std::cout << std::endl;
+	int index = 0;	
 	
 	try {
 		while (lTockens.size() > 1) {
@@ -246,12 +231,10 @@ double MyPerfectApp::ProcessString(std::string& src, int startPos)
 						--el;
 					}
 				}
-
-
+				
 				prevEl = el;
 
 			}
-
 		}
 	}
 	catch (int iEx) {
@@ -282,7 +265,8 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 			int curLine = 0;
 			/*
 			 * количество не закрытых на данный момент скобок
-			 * в мормальном состоянии всегда одна
+			 * в нормальном состоянии всегда одна
+			 * больше - значит мы в блоке, который нужно пропустить
 			 */
 			int bracketsCount = 1;
 			BracketZoneData tempData{ 0,0 };
@@ -293,14 +277,14 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 
 			/*
 			 * этот цикл проходит по всем строкам
-			 * проверяет на наличие заданных открывающтх скобок
-			 * в противном случае исполняет строку
+			 * ищет ключевые слова блоков
+			 * находит - рекурсивно передает управление найденым блоком
+			 * с учетом посчитанных данных
 			 */
 			for (curLine = zoneData.beginIndex; bracketsCount && curLine < zoneData.endIndex; curLine++) {
 
 				doWeSkip = false;
 				
-				//не самый эффективный способ
 				for (auto curCharIndex = 0; curCharIndex < sourceData.at(curLine).size(); curCharIndex++) {
 
 					
@@ -323,8 +307,6 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 							doWeSkip = true;
 								
 						}
-						
-						
 					}
 					
 					if (sourceData.at(curLine).at(curCharIndex) == OPEN_PREPR_BRACKET){
@@ -332,8 +314,6 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 							tempData.beginIndex = curLine + 1;
 						bracketsCount++;
 						doWeSkip = true;
-						
-						
 					}
 
 					if (sourceData.at(curLine).at(curCharIndex) == CLOSE_PREPR_BRACKET) {
@@ -351,9 +331,7 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 						bracketsCount--;
 						doWeSkip = true;
 						
-						
 					}
-					
 				}
 				
 
@@ -361,20 +339,12 @@ void MyPerfectApp::ExecuteBracketZone(int numOfRepeats, BracketZoneData zoneData
 					std::cout << "Результат выполнения выражения: " << sourceData.at(curLine) << "\n>>";
 					std::cout << ProcessString(sourceData.at(curLine)) << std::endl << std::endl;
 				}
-
-
 			}
-
-
-
 		}
 	}catch (std::out_of_range&)
 	{
-		std::cerr << "Sth went wrong\n";
+		std::cerr << "Something went wrong while executing bracket zone\n";
 	}
-
-
-	
 }
 
 bool MyPerfectApp::isCharADigit(char src)
@@ -392,6 +362,7 @@ bool MyPerfectApp::isCharALetter(char src)
 	return src >= 'A' && src <='Z' || src >= 'a' && src <= 'z';
 }
 
+//пустое пространство,которое нужно очистить
 bool MyPerfectApp::isCharASpace(char src) {
 	return src == ' ' || src == '\t';
 }

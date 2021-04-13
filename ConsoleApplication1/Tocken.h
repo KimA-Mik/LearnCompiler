@@ -69,7 +69,7 @@ struct Tocken
 			
 
 		default:
-			std::cerr << "Lol" << std::endl;
+			std::cerr << "You gave me a wrong operator, tell me how..." << std::endl;
 			break;
 		}
 	}
